@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>webTmp4Example</title>
+</head>
+<body>
+
+<form method="get" id="form1" action="enterDataServlet">
+
+    <fieldset style="border:1px #ffb0dd solid;">
+        <legend><span style="font-family:Monotype Corsiva;color:#cb6ac6;font-size:18px">Save data </span> </legend>
+
+        <div>
+            <label>Enter the name:</label><br>
+            <input name="name" type="user-string" required autofocus><br>
+            <br>
+            <label>Enter the second name:</label><br>
+            <input name="second_name" type="user-string" placeholder="enter here" required>
+            <br>
+            <label>Enter the last name:</label><br>
+            <input name="last_name" type="user-string" required >
+
+        </div><br>
+        <div>
+            <input name="enter" type="submit" value="Save">
+            <input name="reset" type="reset" value="Clear">
+        </div>
+    </fieldset>
+</form>
+</body>
+</html>
