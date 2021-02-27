@@ -15,6 +15,8 @@ import javax.ejb.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Stateless
 @Local
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -79,6 +81,27 @@ public class EventLogicImpl implements EventLogic {
             }
         }
         return isDateFree;
+    }
+
+    @Override
+    public Optional<Event> getEmployeeEventAtDate(Employee employee, LocalDate date) throws DataStorageException {
+
+        List<Event> allActiveEvents = new ArrayList<>();
+        allActiveEvents.addAll(getAllActiveEvents(employee, date.getYear()));
+
+        if (allActiveEvents.size() > 0) {
+
+            for (int i = 0; i < allActiveEvents.size(); i++) {
+                if (allActiveEvents.get(i).getDateOfEvent().equals(date)) {
+
+                    Optional<Event> event = Optional.ofNullable(allActiveEvents.get(i));
+
+                    return  event;
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 
     @Override

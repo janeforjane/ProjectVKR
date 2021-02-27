@@ -15,7 +15,7 @@ public interface AbsenceLogic {
     //enter
     void createAbsence(Employee employee, LocalDate dateOfAbsence) throws DateIsBusyException, DataStorageException;
     void modifyAbsenceComment(Absence absence) throws DataStorageException;
-    void removeReasonForAbsence (Absence absence) throws DataStorageException;//save in DB absence
+    void removeReasonForAbsence (Absence absence, CommonOvertime commonOvertime) throws DataStorageException;//save in DB absence
     void addReasonOfAbsence(Absence absence, CommonOvertime additionalCommonOvertime) throws DataStorageException, ReasonAlreadyExistException;
 
     //get

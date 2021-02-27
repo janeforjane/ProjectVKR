@@ -9,12 +9,16 @@ import logic.exception.DateIsBusyException;
 import logic.interfaces.BTWeekdayLogic;
 import logic.interfaces.EventLogic;
 
+import javax.ejb.*;
 import java.time.LocalDate;
 import java.util.List;
-
+@Stateless
+@Local
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class BTWeekdayLogicImpl implements BTWeekdayLogic {
-
+    @EJB
     DAOBTWeekday daobtWeekday;
+    @EJB
     EventLogic eventLogic;
 
     @Override

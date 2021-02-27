@@ -9,9 +9,15 @@ import logic.exception.DateIsBusyException;
 import logic.interfaces.EventLogic;
 import logic.interfaces.PaidOvertimeLogic;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import java.time.LocalDate;
 import java.util.List;
-
+@Stateless
+@Local
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class PaidOvertimeLogicImpl implements PaidOvertimeLogic {
 
     DAOPaidOvertime daoPaidOvertime;

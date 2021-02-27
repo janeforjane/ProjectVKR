@@ -12,6 +12,7 @@ public class Absence extends Event{
 
     @Column(name = "ID")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
 
     @OneToOne(fetch = FetchType.LAZY)

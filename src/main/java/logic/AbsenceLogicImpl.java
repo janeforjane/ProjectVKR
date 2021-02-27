@@ -11,18 +11,27 @@ import logic.interfaces.BTWeekEndLogic;
 import logic.interfaces.EventLogic;
 import logic.interfaces.OvertimeLogic;
 
+import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Stateless
+@Local
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class AbsenceLogicImpl implements AbsenceLogic {
 
+    @EJB
     EventLogic eventLogic;
+    @EJB
     DAOAbsence daoAbsence;
+    @EJB
     BTWeekEndLogic btWeekEndLogic;
+    @EJB
     OvertimeLogic overtimeLogic;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createAbsence(Employee employee, LocalDate dateOfAbsence) throws DateIsBusyException, DataStorageException {
 
         if (eventLogic.isDateFree(employee, dateOfAbsence)){
@@ -41,9 +50,16 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
-    public void removeReasonForAbsence(Absence absence) throws DataStorageException {
+    public void removeReasonForAbsence(Absence absence, CommonOvertime commonOvertime) throws DataStorageException {
 
-        absence.setReasonsOfAbsenceOvertime(null);
+        if (commonOvertime instanceof Overtime){
+
+            absence.setReasonsOfAbsenceOvertime(null);
+        }else {
+
+            absence.setReasonsOfAbsenceBusinessTrip(null);
+        }
+
         daoAbsence.modifyAbsence(absence);
         //todo ИСКЛЮЧЕНИЕ если нечего удалять
 
@@ -76,8 +92,10 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfAbsencesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
-        return daoAbsence.getAllActiveAbsencesForPeriod(dateFrom,dateTo).size();
+
+        return daoAbsence.getAllActiveAbsencesForPeriod(dateFrom, dateTo).size();
     }
 
     @Override

@@ -3,14 +3,18 @@ package logic.interfaces;
 import dao.exception.DataStorageException;
 import entities.*;
 import logic.exception.DateIsBusyException;
+import logic.exception.ReasonAlreadyExistException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BTWeekEndLogic {
 
     //enter
-    void createBTWeekEnd(Employee employee, LocalDate dateOfBTWeekEnd) throws DateIsBusyException, DataStorageException;
+    void createBTWeekEndWithoutAbsence(Employee employee, LocalDate dateOfBTWeekEnd) throws DateIsBusyException, DataStorageException;
+    void createBTWeekEndWithAbsence(Employee employee, LocalDate dateOfBTWeekEnd, LocalDate dateOfAbsence) throws DateIsBusyException, DataStorageException;
+    void addAbsence(Employee employee, BusinessTripWeekEnd businessTripWeekEnd, Absence absence) throws ReasonAlreadyExistException, DataStorageException;
     void removeAbsenceFromBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException;
     void modifyBTWeekendComment(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException;
 //    void createAbsenceForBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd, Absence absence);

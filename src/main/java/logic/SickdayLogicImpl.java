@@ -8,15 +8,23 @@ import entities.Sickday;
 import logic.exception.DateIsBusyException;
 import logic.interfaces.EventLogic;
 import logic.interfaces.SickdayLogic;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.ejb.*;
 import java.time.LocalDate;
 import java.util.List;
-
+@Stateless
+@Local
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class SickdayLogicImpl implements SickdayLogic {
 
+    @EJB
     DAOSickday daoSickday;
+    @EJB
     EventLogic eventLogic;
 
+    private static final Logger log = LogManager.getLogger(SickdayLogicImpl.class);
 
     @Override
     public void createSickday(Employee employee, LocalDate dateOfSickday) throws DateIsBusyException, DataStorageException {
@@ -28,6 +36,8 @@ public class SickdayLogicImpl implements SickdayLogic {
             sickday.setStatusEvent(StatusEvent.ACTIVE);
             daoSickday.newSickday(sickday);
 
+            log.info("Logic: createSickday - sickday was create");
+
         }else {
             throw new DateIsBusyException("Date "+ dateOfSickday.toString()+" is busy");
         }
@@ -37,6 +47,7 @@ public class SickdayLogicImpl implements SickdayLogic {
     public void modifySickdayComment(Sickday sickday) throws DataStorageException {
         daoSickday.modifySickday(sickday);
 
+        log.info("Logic: modifySickdayComment - sickday comment was create");
     }
 
     @Override
@@ -63,6 +74,8 @@ public class SickdayLogicImpl implements SickdayLogic {
 
         sickday.setStatusEvent(StatusEvent.NOTACTIVE);
         daoSickday.modifySickday(sickday);
+
+        log.info("Logic: cancelSickday - sickday was modify(StatusEvent.NOTACTIVE)");
 
     }
 }

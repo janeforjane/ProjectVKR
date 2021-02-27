@@ -16,6 +16,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,11 +24,13 @@ import java.util.List;
 
 @Stateless
 @Local
-@TransactionManagement(value= TransactionManagementType.BEAN)
 public class DAOAbsenceImpl implements DAOAbsence {
 
-    @PersistenceUnit(unitName = "input-message")
-    private EntityManagerFactory entityManagerFactory;
+//    @PersistenceUnit(unitName = "input-message")
+//    private EntityManagerFactory entityManagerFactory;
+
+    @PersistenceContext(unitName = "input-message")
+    private EntityManager entityManager;
 
     private static final Logger log = LogManager.getLogger(DAOAbsenceImpl.class);
 
@@ -36,11 +39,11 @@ public class DAOAbsenceImpl implements DAOAbsence {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-            entityManager.getTransaction().begin();
+//            entityManager.getTransaction().begin();
             entityManager.persist(absence);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("newAbsence:new absence was persist in DB");
 
@@ -55,10 +58,10 @@ public class DAOAbsenceImpl implements DAOAbsence {
     public void modifyAbsence(Absence absence) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.merge(absence);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("modifyAbsence:absence was modify in DB");
 
@@ -73,10 +76,10 @@ public class DAOAbsenceImpl implements DAOAbsence {
     public void removeAbsence(Absence absence) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.remove(absence);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("removeAbsence:absence was remove in DB");
 
@@ -91,7 +94,7 @@ public class DAOAbsenceImpl implements DAOAbsence {
     @Override
     public Absence getAbsence(Absence absence) throws DataStorageException {
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             Absence absenceFromDB = entityManager.find(Absence.class, absence.getID());
 
@@ -111,8 +114,8 @@ public class DAOAbsenceImpl implements DAOAbsence {
     public List<Absence> getAllEmployeeActiveAbsences(Employee employee, int year) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             final List allAbsences = new ArrayList();
 
@@ -126,7 +129,7 @@ public class DAOAbsenceImpl implements DAOAbsence {
                     .getResultList();
             allAbsences.addAll(allAbsences2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allAbsences;
         }catch (Exception e){
@@ -139,8 +142,8 @@ public class DAOAbsenceImpl implements DAOAbsence {
     public List<Absence> getAllActiveAbsencesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             List allAbsences = entityManager
                     .createQuery("from Absence where statusEvent=:st_ev and   dateOfEvent between :from and :to", Absence.class)
@@ -150,7 +153,7 @@ public class DAOAbsenceImpl implements DAOAbsence {
 //                    .setParameter("empl", employee)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allAbsences;
         }catch (Exception e){

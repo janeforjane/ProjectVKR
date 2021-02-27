@@ -2,17 +2,22 @@ package logic.interfaces;
 
 import dao.exception.DataStorageException;
 import entities.Absence;
+import entities.BusinessTripWeekEnd;
 import entities.Employee;
 import entities.Overtime;
 import logic.exception.DateIsBusyException;
+import logic.exception.ReasonAlreadyExistException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface OvertimeLogic {
 
     //enter
-    void createOvertime(Employee employee, LocalDate dateOfOvertime) throws DateIsBusyException, DataStorageException;
+    void createOvertimeWithoutAbsence(Employee employee, LocalDate dateOfOvertime) throws DateIsBusyException, DataStorageException;
+    void createOvertimeWithAbsence(Employee employee, LocalDate dateOfOvertime, LocalDate dateOfAbsence) throws DateIsBusyException, DataStorageException;
+    void addAbsence(Employee employee, Overtime overtime, Absence absence) throws ReasonAlreadyExistException, DataStorageException;
     void modifyOvertimeComment(Overtime overtime) throws DataStorageException;
     void removeAbsenceFromOvertime(Overtime overtime) throws DataStorageException;
 

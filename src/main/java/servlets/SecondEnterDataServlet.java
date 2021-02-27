@@ -2,20 +2,11 @@ package servlets;
 
 import box.StatusEvent;
 import dao.exception.DataStorageException;
-import dao.interfaces.DAOEmployee;
-import dao.interfaces.DAOPaidOvertime;
-import dao.interfaces.DAOSickday;
-import dao.interfaces.DAOVacation;
-import entities.Employee;
-import entities.Sickday;
-import entities.Vacation;
-import logic.exception.DateIsBusyException;
-import logic.exception.DuplicateFIOException;
-import logic.exception.EmployeeNotFoundException;
-import logic.exception.EventNotFoundException;
-import logic.interfaces.EmployeeLogic;
-import logic.interfaces.EventLogic;
-import logic.interfaces.VacationLogic;
+import dao.interfaces.*;
+import entities.*;
+import logic.exception.*;
+import logic.interfaces.*;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,13 +34,25 @@ public class SecondEnterDataServlet extends HttpServlet {
     @EJB
     DAOEmployee daoEmployee;
     @EJB
+    DAOBTWeekEnd daobtWeekEnd;
+    @EJB
+    DAOAbsence daoAbsence;
+    @EJB
     EmployeeLogic employeeLogic;
+    @EJB
+    BTWeekdayLogic btWeekdayLogic;
     @EJB
     VacationLogic vacationLogic;
     @EJB
     EventLogic eventLogic;
     @EJB
     DAOVacation daoVacation;
+    @EJB
+    BTWeekEndLogic btWeekEndLogic;
+    @EJB
+    SickdayLogic sickdayLogic;
+    @EJB
+    AbsenceLogic absenceLogic;
 
 
     @Override
@@ -57,13 +60,39 @@ public class SecondEnterDataServlet extends HttpServlet {
 
 
 
-        LocalDate vacationDate = LocalDate.of(2020,8,1);
-        LocalDate vacationDate2 = LocalDate.of(2020,8,31);
+        LocalDate date = LocalDate.of(2020,1,1);
+        LocalDate date2 = LocalDate.of(2020,12,30);
         try {
             Optional<Employee> employee = employeeLogic.getEmployee(2L);
-            int countOfVacations = vacationLogic.getAllFactVacationDays(employee.get(),2020).size();
 
-            log.info("count is - {}", countOfVacations);
+//            Absence a = new Absence();
+//            a.setID(3L);
+//            Absence absence = daoAbsence.getAbsence(a);
+//
+//            BusinessTripWeekEnd b = new BusinessTripWeekEnd();
+//            b.setID(5L);
+//            BusinessTripWeekEnd businessTripWeekEnd = daobtWeekEnd.getBTWeekEnd(b);
+//
+//            absenceLogic.addReasonOfAbsence(absence, businessTripWeekEnd);
+
+//            List<Absence> allAbsenceDaysWithoutReasons = absenceLogic.getAllAbsenceDaysWithoutReasons(employee.get(), 2021);
+
+
+//            Absence a = new Absence();
+//            a.setID(1L);
+//            Absence absence = new Absence(employee.get(),date);
+            int countOfAbsencesForPeriod = absenceLogic.getCountOfAbsencesForPeriod(date, date2);
+            System.out.println("countOfAbsencesForPeriod -----------" + countOfAbsencesForPeriod);
+
+
+//            List<BusinessTripWeekEnd> allActiveBTWeekEnd = btWeekEndLogic.getAllBTWeekEndWithoutAbsences(employee.get(), 2020);
+
+//            System.out.println(allAbsenceDaysWithoutReasons.size());
+
+
+//            int countOfVacations = vacationLogic.getAllFactVacationDays(employee.get(),2020).size();
+
+//            log.info("count is - {}", size);
         } catch (DataStorageException e) {
             e.printStackTrace();
         }
