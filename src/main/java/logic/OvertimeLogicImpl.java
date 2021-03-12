@@ -15,6 +15,7 @@ import logic.interfaces.EventLogic;
 import logic.interfaces.OvertimeLogic;
 
 import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     DAOAbsence daoAbsence;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createOvertimeWithoutAbsence(Employee employee, LocalDate dateOfOvertime) throws DateIsBusyException, DataStorageException {
         //проверить нет ли события на этот день
         //проверить выходной ли это
@@ -52,6 +54,7 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createOvertimeWithAbsence(Employee employee, LocalDate dateOfOvertime, LocalDate dateOfAbsence) throws DateIsBusyException, DataStorageException {
 
         //проверить нет ли командировки на день переработки
@@ -83,6 +86,7 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void addAbsence(Employee employee, Overtime overtime, Absence absence) throws ReasonAlreadyExistException, DataStorageException {
 
         /*
@@ -110,12 +114,14 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifyOvertimeComment(Overtime overtime) throws DataStorageException {
         daoOvertime.modifyOvertime(overtime);
 
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void removeAbsenceFromOvertime(Overtime overtime) throws DataStorageException {
 
         overtime.setAbsenceForOvertime(null);
@@ -123,6 +129,7 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public Absence getAbsenceForOvertime(Overtime overtime) {
         Absence absenceForOvertime = overtime.getAbsenceForOvertime();
 
@@ -130,12 +137,14 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Overtime> getAllActiveOvertimes(Employee employee, int year) throws DataStorageException {
 
         return daoOvertime.getAllEmployeeActiveOvertimeDays(employee, year);
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Overtime> getAllOvertimesWithAbsences(Employee employee, int year) throws DataStorageException {
         List<Overtime> overtimes = daoOvertime.getAllEmployeeActiveOvertimeDays(employee, year);
         List<Overtime> overtimesWithAbsences = new ArrayList<>();
@@ -150,6 +159,7 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Overtime> getAllOvertimesWithoutAbsences(Employee employee, int year) throws DataStorageException {
         List<Overtime> overtimes = daoOvertime.getAllEmployeeActiveOvertimeDays(employee, year);
         List<Overtime> overtimesWithAbsences = new ArrayList<>();
@@ -164,17 +174,26 @@ public class OvertimeLogicImpl implements OvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfOvertimeDays(Employee employee, int year) throws DataStorageException {
         return daoOvertime.getAllEmployeeActiveOvertimeDays(employee, year).size();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfOvertimesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
-        daoOvertime.getAllActiveOvertimeDaysForPeriod(dateFrom, dateTo);
-        return 0;
+        int size = daoOvertime.getAllActiveOvertimeDaysForPeriod(dateFrom, dateTo).size();
+        return size;
     }
 
     @Override
+    public List<Overtime> getAllActiveOvertimesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
+
+        return daoOvertime.getAllActiveOvertimeDaysForPeriod(dateFrom, dateTo);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void cancelOvertime(Overtime overtime) throws DataStorageException {
         //деактивировать переработку
         //найти absence с ней связанный - его отвязать от этой

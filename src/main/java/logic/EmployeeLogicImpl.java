@@ -31,7 +31,6 @@ public class EmployeeLogicImpl implements EmployeeLogic {
 
         if (daoEmployee.isEmployeeExist(lastName,name, secondName)) {
 
-            //todo ИСКЛЮЧЕНИЕ
             throw new DuplicateFIOException("Employee: "+ name +" "+secondName+" "+ lastName+" already exist.");
         }else {
             daoEmployee.newEmployee(newEmployee);
@@ -39,18 +38,21 @@ public class EmployeeLogicImpl implements EmployeeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifyEmployee(Employee employee) throws EmployeeNotFoundException, DataStorageException {
 
         daoEmployee.modifyEmployee(employee);
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public Optional<Employee> getEmployee(Long id) throws DataStorageException {
         return daoEmployee.getEmployee(id);
 
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Employee> getFilterEmployees(Employee employee) throws DataStorageException {
         //todo поиск только по имя, фамилия, должность
 
@@ -70,17 +72,18 @@ public class EmployeeLogicImpl implements EmployeeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Employee> getAllActiveEmployees() throws DataStorageException {
 
         List<Employee> allEmployees = daoEmployee.getAllEmployees();
 //        List<Employee> allActiveEmployees = new ArrayList<>();
 
         List<Employee> allActiveEmployees = allEmployees.stream()
-                .filter(e -> e.getCancelDate() != null)
+                .filter(e -> e.getCancelDate() == null)
                 .collect(Collectors.toList());
 
 //        for (int i = 0; i < allEmployees.size(); i++) {
-//            if (allEmployees.get(i).getCancelDate() != null){
+//            if (allEmployees.get(i).getCancelDate() == null){
 //
 //                allActiveEmployees.add(allEmployees.get(i));
 //            }
@@ -91,6 +94,7 @@ public class EmployeeLogicImpl implements EmployeeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Employee> getAllNotActiveEmployees() throws DataStorageException {
 
         List<Employee> allEmployees = daoEmployee.getAllEmployees();
@@ -110,12 +114,14 @@ public class EmployeeLogicImpl implements EmployeeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Employee> getAllEmployees() throws DataStorageException {
 
         return daoEmployee.getAllEmployees();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void removeEmployee(Employee employee, LocalDate cancelDate) throws EmployeeNotFoundException, DataStorageException {
 
         employee.setCancelDate(cancelDate);

@@ -16,6 +16,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,11 +24,14 @@ import java.util.List;
 
 @Stateless
 @Local
-@TransactionManagement(value= TransactionManagementType.BEAN)
+//@TransactionManagement(value= TransactionManagementType.BEAN)
 public class DAOBTWeekdayImpl implements DAOBTWeekday {
 
-    @PersistenceUnit(unitName = "input-message")
-    private EntityManagerFactory entityManagerFactory;
+//    @PersistenceUnit(unitName = "input-message")
+//    private EntityManagerFactory entityManagerFactory;
+
+    @PersistenceContext(unitName = "input-message")
+    private EntityManager entityManager;
 
     private static final Logger log = LogManager.getLogger(DAOBTWeekdayImpl.class);
 
@@ -37,11 +41,11 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//
+//            entityManager.getTransaction().begin();
             entityManager.persist(businessTripWeekday);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("newBTWeekday:new BTWeekday was persist in DB");
 
@@ -56,10 +60,10 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
     public void modifyBTWeekday(BusinessTripWeekday businessTripWeekday) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.merge(businessTripWeekday);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("modifyBTWeekday:BTWeekday was modify in DB");
 
@@ -74,10 +78,10 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
     public void removeBTWeekday(BusinessTripWeekday businessTripWeekday) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.remove(businessTripWeekday);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("removeBTWeekday:BTWeekday was remove in DB");
 
@@ -94,7 +98,7 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
         //todo doesn't use from interface
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             BusinessTripWeekday businessTripWeekdayFromDB = entityManager.find(BusinessTripWeekday.class, businessTripWeekday.getID());
 
@@ -129,9 +133,27 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
     }
 
     @Override
-    public List<BusinessTripWeekday> getAllBTWeekdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) {
-        //todo doesn't use from interface
-        return null;
+    public List<BusinessTripWeekday> getAllBTWeekdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
+        try {
+
+
+            final List allEmployeeActiveBTWeekdays = new ArrayList();
+
+            List allEmployeeActiveBTWeekdays2 = entityManager
+                    .createQuery("from BusinessTripWeekday where statusEvent=:st_ev  " +
+                            "and   dateOfEvent between :from and :to", BusinessTripWeekday.class)
+                    .setParameter("st_ev", StatusEvent.ACTIVE)
+                    .setParameter("from", dateFrom)
+                    .setParameter("to", dateTo)
+                    .getResultList();
+
+            allEmployeeActiveBTWeekdays.addAll(allEmployeeActiveBTWeekdays2);
+
+            return allEmployeeActiveBTWeekdays;
+        }catch (Exception e){
+            throw new DataStorageException("Error. Data Storage error.", e);
+
+        }
     }
 
     @Override
@@ -140,8 +162,8 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             final List allEmployeeActiveBTWeekdays = new ArrayList();
 
@@ -156,7 +178,7 @@ public class DAOBTWeekdayImpl implements DAOBTWeekday {
 
             allEmployeeActiveBTWeekdays.addAll(allEmployeeActiveBTWeekdays2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allEmployeeActiveBTWeekdays;
         }catch (Exception e){

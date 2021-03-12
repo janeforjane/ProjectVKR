@@ -145,15 +145,15 @@ public class DAOAbsenceImpl implements DAOAbsence {
 //            EntityManager entityManager = entityManagerFactory.createEntityManager();
 //            entityManager.getTransaction().begin();
 
-            List allAbsences = entityManager
+            List allAbsences = new ArrayList();
+            List allAbsences2 = entityManager
                     .createQuery("from Absence where statusEvent=:st_ev and   dateOfEvent between :from and :to", Absence.class)
                     .setParameter("st_ev", StatusEvent.ACTIVE)
                     .setParameter("from", dateFrom)
                     .setParameter("to", dateTo)
-//                    .setParameter("empl", employee)
                     .getResultList();
 
-//            entityManager.getTransaction().commit();
+            allAbsences.addAll(allAbsences2);
 
             return allAbsences;
         }catch (Exception e){

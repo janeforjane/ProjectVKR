@@ -2,6 +2,8 @@ package entities;
 
 import box.EventTag;
 import box.StatusEvent;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,7 +19,8 @@ public class Sickday extends Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 

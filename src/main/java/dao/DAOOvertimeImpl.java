@@ -16,6 +16,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,11 +24,14 @@ import java.util.List;
 
 @Stateless
 @Local
-@TransactionManagement(value= TransactionManagementType.BEAN)
+//@TransactionManagement(value= TransactionManagementType.BEAN)
 public class DAOOvertimeImpl implements DAOOvertime {
 
-    @PersistenceUnit(unitName = "input-message")
-    private EntityManagerFactory entityManagerFactory;
+//    @PersistenceUnit(unitName = "input-message")
+//    private EntityManagerFactory entityManagerFactory;
+
+    @PersistenceContext(unitName = "input-message")
+    private EntityManager entityManager;
 
     private static final Logger log = LogManager.getLogger(DAOOvertimeImpl.class);
 
@@ -36,11 +40,11 @@ public class DAOOvertimeImpl implements DAOOvertime {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-            entityManager.getTransaction().begin();
+//            entityManager.getTransaction().begin();
             entityManager.persist(overtime);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("newOvertime:new overtime was persist in DB");
 
@@ -55,10 +59,10 @@ public class DAOOvertimeImpl implements DAOOvertime {
     public void modifyOvertime(Overtime overtime) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.merge(overtime);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("modifyOvertime:overtime was modify in DB");
 
@@ -74,10 +78,10 @@ public class DAOOvertimeImpl implements DAOOvertime {
 
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.remove(overtime);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("removeOvertime:overtime was remove in DB");
 
@@ -91,7 +95,7 @@ public class DAOOvertimeImpl implements DAOOvertime {
     @Override
     public Overtime getOvertime(Overtime overtime) throws DataStorageException {
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             Overtime overtimeFromDB = entityManager.find(Overtime.class, overtime.getID());
 
@@ -111,8 +115,8 @@ public class DAOOvertimeImpl implements DAOOvertime {
     public List<Overtime> getAllEmployeeActiveOvertimeDays(Employee employee, int year) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             List allOvertimes = new ArrayList();
 
@@ -127,7 +131,7 @@ public class DAOOvertimeImpl implements DAOOvertime {
 
             allOvertimes.addAll(allOvertimes2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allOvertimes;
         }catch (Exception e){
@@ -140,17 +144,20 @@ public class DAOOvertimeImpl implements DAOOvertime {
     public List<Overtime> getAllActiveOvertimeDaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
-            List allSickdays = entityManager
+            List allSickdays = new ArrayList();
+            List allSickdays2 = entityManager
                     .createQuery("from Overtime where statusEvent=:st_ev and   dateOfEvent between :from and :to", Overtime.class)
                     .setParameter("st_ev", StatusEvent.ACTIVE)
                     .setParameter("from", dateFrom)
                     .setParameter("to", dateTo)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
+
+            allSickdays.addAll(allSickdays2);
 
             return allSickdays;
         }catch (Exception e){

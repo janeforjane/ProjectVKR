@@ -15,7 +15,7 @@ public interface DAOBTWeekEnd {
     void modifyBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException;
     void removeBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException;
     BusinessTripWeekEnd getBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException;
-//    List<BusinessTripWeekEnd> getAllBTWeekEnd();
+    List<BusinessTripWeekEnd> getAllActiveBTWeekEnd(int year) throws DataStorageException;
 //    List<BusinessTripWeekEnd> getAllEmployeeBTWeekEnd(Employee employee, int year);
 //    List<BusinessTripWeekEnd> getAllEmployeeBTWeekendsForPeriod(Employee employee, LocalDate dateFrom, LocalDate dateTo);
     List<BusinessTripWeekEnd> getAllEmployeeActiveBTWeekEnd(Employee employee, int year) throws DataStorageException;

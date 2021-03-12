@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class VacationLogicImpl implements VacationLogic {
 
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createPlanVacation(Vacation vacation) throws DateIsBusyException, DataStorageException {
 
         // если без даты - записать в БД новый vacation
@@ -89,6 +91,7 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void addCommentForVacation(Vacation vacation) throws DataStorageException {
 
         daoVacation.modifyVacation(vacation);
@@ -97,6 +100,7 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void replaceVacation(Employee employee, Vacation vacationDayForCancel, LocalDate dateOfNewVacation) throws DateIsBusyException, DataStorageException {
         log.info("replaceVacation");
         //проверить свободна ли дата
@@ -132,6 +136,7 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfVacationsOfWeek(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         List<Vacation> allVacationOfWeek = new ArrayList<>();
         List<Vacation> allActiveVacationForPeriod = daoVacation.getAllActiveVacationForPeriod(dateFrom, dateTo);
@@ -142,6 +147,21 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<Vacation> getAllFactVacationDaysForAll(int year) throws DataStorageException {
+
+        LocalDate dateFrom = LocalDate.of(year,1,1);
+        LocalDate dateTo = LocalDate.of(year,12,31);
+        List<Vacation> allVacationOfWeek = new ArrayList<>();
+        List<Vacation> allActiveVacationForPeriod = daoVacation.getAllActiveVacationForPeriod(dateFrom, dateTo);
+
+        allVacationOfWeek.addAll(allActiveVacationForPeriod);
+
+        return allVacationOfWeek;
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountEmployeeAvailableVacationDays(Employee employee, int year) throws DataStorageException {
         // количество дней отпуска - без даты + с датой Активные
 
@@ -161,6 +181,7 @@ public class VacationLogicImpl implements VacationLogic {
 
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Vacation> getAllPlanVacationDays(Employee employee, int year) throws DataStorageException {
 
         List<Vacation> allEmployeeVacation = new ArrayList<>();
@@ -183,6 +204,7 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Vacation> getAllFactVacationDays(Employee employee, int year) throws DataStorageException {
 
         List<Vacation> allEmployeeVacation = new ArrayList<>();
@@ -206,6 +228,32 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<Vacation> getAllReplacedVacationDays(Employee employee, int year) throws DataStorageException {
+
+        List<Vacation> allEmployeeVacation = new ArrayList<>();
+        List<Vacation> allEmployeeVacation2 = daoVacation.getAllEmployeeVacation(employee, year);
+
+        allEmployeeVacation.addAll(allEmployeeVacation2);
+
+        List<Vacation> allReplaceEmployeeVacation = new ArrayList<Vacation>();
+
+        if (allEmployeeVacation.size() != 0) {
+
+            for (int i = 0; i < allEmployeeVacation.size(); i++) {
+
+                if (allEmployeeVacation.get(i).getReplaceDays() != null) {
+
+                    allReplaceEmployeeVacation.add(allEmployeeVacation.get(i));
+                }
+            }
+        }
+        return allReplaceEmployeeVacation;
+
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void removeEmptyVacation(Vacation vacation) throws VacationHaveDateException, DataStorageException {
         // только для отпусков без даты
 
@@ -221,6 +269,7 @@ public class VacationLogicImpl implements VacationLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void removeVacationDate(Vacation vacation) throws VacationHaveDateException, DataStorageException {
         // сделать отпуск с датой просто отпуском без даты
 

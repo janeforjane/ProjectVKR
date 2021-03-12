@@ -10,6 +10,7 @@ import logic.interfaces.BTWeekdayLogic;
 import logic.interfaces.EventLogic;
 
 import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 @Stateless
@@ -22,6 +23,7 @@ public class BTWeekdayLogicImpl implements BTWeekdayLogic {
     EventLogic eventLogic;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createBTWeekday(Employee employee, LocalDate dateOfBTWeekday) throws DateIsBusyException, DataStorageException {
 
         if (eventLogic.isDateFree(employee, dateOfBTWeekday)){
@@ -37,12 +39,14 @@ public class BTWeekdayLogicImpl implements BTWeekdayLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifyCommentBTWeekday(BusinessTripWeekday businessTripWeekday) throws DataStorageException {
         daobtWeekday.modifyBTWeekday(businessTripWeekday);
 
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<BusinessTripWeekday> getAllActiveEmployeeBTWeekday(Employee employee, int year) throws DataStorageException {
 
         List<BusinessTripWeekday> businessTripActiveWeekdays = daobtWeekday.getAllEmployeeActiveBTWeekdays(employee, year);
@@ -51,6 +55,13 @@ public class BTWeekdayLogicImpl implements BTWeekdayLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<BusinessTripWeekday> getAllActiveBTWeekday(int year) throws DataStorageException {
+        return daobtWeekday.getAllBTWeekdaysForPeriod(LocalDate.of(year,1,1),LocalDate.of(year,12,31));
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfActiveEmployeeBTWeekday(Employee employee, int year) throws DataStorageException {
 
         List<BusinessTripWeekday> businessTripActiveWeekdays = daobtWeekday.getAllEmployeeActiveBTWeekdays(employee, year);
@@ -69,6 +80,7 @@ public class BTWeekdayLogicImpl implements BTWeekdayLogic {
 //    }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void cancelBTWeekday(BusinessTripWeekday businessTripWeekday) throws DataStorageException {
         businessTripWeekday.setStatusEvent(StatusEvent.NOTACTIVE);
         daobtWeekday.modifyBTWeekday(businessTripWeekday);

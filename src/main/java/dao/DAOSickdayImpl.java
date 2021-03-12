@@ -15,6 +15,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,11 +24,15 @@ import java.util.List;
 
 @Stateless
 @Local
-@TransactionManagement(value= TransactionManagementType.BEAN)
+//@TransactionManagement(value= TransactionManagementType.BEAN)
 public class DAOSickdayImpl implements DAOSickday {
 
-    @PersistenceUnit(unitName = "input-message")
-    private EntityManagerFactory entityManagerFactory;
+//    @PersistenceUnit(unitName = "input-message")
+//    private EntityManagerFactory entityManagerFactory;
+
+    @PersistenceContext(unitName = "input-message")
+    private EntityManager entityManager;
+
 
     private static final Logger log = LogManager.getLogger(DAOSickdayImpl.class);
 
@@ -36,11 +41,11 @@ public class DAOSickdayImpl implements DAOSickday {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//
+//            entityManager.getTransaction().begin();
             entityManager.persist(sickday);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("newSickday:new sickday was persist in DB");
 
@@ -55,10 +60,10 @@ public class DAOSickdayImpl implements DAOSickday {
     public void modifySickday(Sickday sickday) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.merge(sickday);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("modifySickday:sickday was modify in DB");
 
@@ -71,10 +76,10 @@ public class DAOSickdayImpl implements DAOSickday {
     @Override
     public void removeSickday(Sickday sickday) throws DataStorageException {
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.remove(sickday);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("removeSickday:sickday was remove in DB");
 
@@ -89,7 +94,7 @@ public class DAOSickdayImpl implements DAOSickday {
     public Sickday getSickday(Sickday sickday) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             Sickday sickdayFromDB = entityManager.find(Sickday.class, sickday.getID());
 
@@ -110,14 +115,14 @@ public class DAOSickdayImpl implements DAOSickday {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             List allSickdays = entityManager
                     .createQuery("from Sickday ", Sickday.class)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allSickdays;
         }catch (Exception e){
@@ -130,15 +135,15 @@ public class DAOSickdayImpl implements DAOSickday {
     public List<Sickday> getAllActiveSickdays() throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             List allSickdays = entityManager
                     .createQuery("from Sickday where statusEvent=:st_ev", Sickday.class)
                     .setParameter("st_ev", StatusEvent.ACTIVE)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allSickdays;
         }catch (Exception e){
@@ -151,10 +156,11 @@ public class DAOSickdayImpl implements DAOSickday {
     public List<Sickday> getAllActiveSickdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
+            final List allSickdays = new ArrayList();
 
-            List allSickdays = entityManager
+            List allSickdays2 = entityManager
                     .createQuery("from Sickday where statusEvent=:st_ev and   dateOfEvent between :from and :to", Sickday.class)
                     .setParameter("st_ev", StatusEvent.ACTIVE)
                     .setParameter("from", dateFrom)
@@ -162,7 +168,8 @@ public class DAOSickdayImpl implements DAOSickday {
 //                    .setParameter("empl", employee)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+            allSickdays.addAll(allSickdays2);
+//            entityManager.getTransaction().commit();
 
             return allSickdays;
         }catch (Exception e){
@@ -178,8 +185,8 @@ public class DAOSickdayImpl implements DAOSickday {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             final List allSickdays =new ArrayList();
 
@@ -194,7 +201,7 @@ public class DAOSickdayImpl implements DAOSickday {
 
             allSickdays.addAll(allSickdays2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allSickdays;
         }catch (Exception e){

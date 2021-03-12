@@ -21,7 +21,8 @@ public interface BTWeekEndLogic {
 
     //get
     Absence getAbsenceForOvertime(BusinessTripWeekEnd businessTripWeekEnd);
-    List<BusinessTripWeekEnd> getAllActiveBTWeekEnd(Employee employee, int year) throws DataStorageException;
+    List<BusinessTripWeekEnd> getAllActiveEmployeeBTWeekEnd(Employee employee, int year) throws DataStorageException;
+    List<BusinessTripWeekEnd> getAllActiveBTWeekEnd(int year) throws DataStorageException;
     List<BusinessTripWeekEnd> getAllBTWeekEndWithAbsences(Employee employee, int year) throws DataStorageException;
     List<BusinessTripWeekEnd> getAllBTWeekEndWithoutAbsences(Employee employee, int year) throws DataStorageException;
     int getCountOfBTWeekEndDays (Employee employee, int year) throws DataStorageException;

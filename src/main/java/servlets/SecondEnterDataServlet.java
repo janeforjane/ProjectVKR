@@ -64,6 +64,10 @@ public class SecondEnterDataServlet extends HttpServlet {
         LocalDate date2 = LocalDate.of(2020,12,30);
         try {
             Optional<Employee> employee = employeeLogic.getEmployee(2L);
+            employee.get().setComment("TyTyTy");
+            vacationLogic.getAllFactVacationDays(employee.get(),2020);
+
+            System.out.println(vacationLogic.getAllFactVacationDays(employee.get(),2020).get(0).getDateOfEvent());
 
 //            Absence a = new Absence();
 //            a.setID(3L);
@@ -81,8 +85,8 @@ public class SecondEnterDataServlet extends HttpServlet {
 //            Absence a = new Absence();
 //            a.setID(1L);
 //            Absence absence = new Absence(employee.get(),date);
-            int countOfAbsencesForPeriod = absenceLogic.getCountOfAbsencesForPeriod(date, date2);
-            System.out.println("countOfAbsencesForPeriod -----------" + countOfAbsencesForPeriod);
+//            int countOfAbsencesForPeriod = absenceLogic.getCountOfAbsencesForPeriod(date, date2);
+//            System.out.println("countOfAbsencesForPeriod -----------" + countOfAbsencesForPeriod);
 
 
 //            List<BusinessTripWeekEnd> allActiveBTWeekEnd = btWeekEndLogic.getAllBTWeekEndWithoutAbsences(employee.get(), 2020);

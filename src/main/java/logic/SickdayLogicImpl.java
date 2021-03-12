@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 @Stateless
@@ -27,6 +28,7 @@ public class SickdayLogicImpl implements SickdayLogic {
     private static final Logger log = LogManager.getLogger(SickdayLogicImpl.class);
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createSickday(Employee employee, LocalDate dateOfSickday) throws DateIsBusyException, DataStorageException {
 
         //todo если дата занята - то надо спросить и перенести
@@ -44,6 +46,7 @@ public class SickdayLogicImpl implements SickdayLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifySickdayComment(Sickday sickday) throws DataStorageException {
         daoSickday.modifySickday(sickday);
 
@@ -51,6 +54,7 @@ public class SickdayLogicImpl implements SickdayLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Sickday> getAllActiveSickDays(Employee employee, int year) throws DataStorageException {
 
         List<Sickday> allEmployeeActiveSickdays = daoSickday.getAllEmployeeActiveSickdays(employee, year);
@@ -59,17 +63,26 @@ public class SickdayLogicImpl implements SickdayLogic {
     }
 
     @Override
+    public List<Sickday> getAllSickdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
+        List<Sickday> allSickdaysForPeriod = daoSickday.getAllActiveSickdaysForPeriod(dateFrom, dateTo);
+        return allSickdaysForPeriod;
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfSickdaysOfEmployee(Employee employee, int year) throws DataStorageException {
         List<Sickday> allEmployeeActiveSickdays = daoSickday.getAllEmployeeActiveSickdays(employee, year);
         return allEmployeeActiveSickdays.size();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfAllSickdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         return daoSickday.getAllActiveSickdaysForPeriod(dateFrom, dateTo).size();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void cancelSickday(Sickday sickday) throws DataStorageException {
 
         sickday.setStatusEvent(StatusEvent.NOTACTIVE);

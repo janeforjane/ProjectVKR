@@ -23,6 +23,8 @@ public interface VacationLogic {
     int getCountEmployeeAvailableVacationDays(Employee employee, int year) throws DataStorageException;
     List<Vacation> getAllPlanVacationDays(Employee employee, int year) throws DataStorageException;
     List<Vacation> getAllFactVacationDays(Employee employee, int year) throws DataStorageException;
+    List<Vacation> getAllReplacedVacationDays(Employee employee, int year) throws DataStorageException;
+    List<Vacation> getAllFactVacationDaysForAll(int year) throws DataStorageException;
 
     //remove
     void removeEmptyVacation (Vacation vacation) throws VacationHaveDateException, DataStorageException; // для уменьшения количества отпускных дней

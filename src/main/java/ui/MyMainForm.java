@@ -1,5 +1,7 @@
 package ui;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -48,19 +50,33 @@ public class MyMainForm extends HorizontalLayout {
         statisticHeader.setText("Статистика");
 
         Label labelCommonStatistic = new Label();
-        labelCommonStatistic.setText("Общая статистика");
+        labelCommonStatistic.setText("Отсутствуют");
 
         Header weekAbsence = new Header();
-        weekAbsence.setText("На этой неделе отсутствуют");
+        weekAbsence.setText("на этой неделе");
+        weekAbsence.getStyle().set("color", "#E0FFFF");
+        weekAbsence.setWidth("200px");
 
-        Header dayAbsenceCount = new Header();
+//        Header dayAbsenceCount = new Header();
+        Button dayAbsenceCount = new Button();
         dayAbsenceCount.setText("12");
+        dayAbsenceCount.setWidth("80px");
+        dayAbsenceCount.setHeight("30px");
+        dayAbsenceCount.getStyle().set("border", "1px solid #1E90FF");
+        dayAbsenceCount.getStyle().set("color", "#1E90FF");
+        dayAbsenceCount.getStyle().set("font-size", "x-large");
 
         Header weekAbsence2 = new Header();
-        weekAbsence2.setText("Сегодня отсутствуют");
+        weekAbsence2.setText("сегодня");
+        weekAbsence2.getStyle().set("color", "#E0FFFF");
 
-        Header dayAbsenceCount2 = new Header();
+        Button dayAbsenceCount2 = new Button();
         dayAbsenceCount2.setText("2");
+        dayAbsenceCount2.setWidth("80px");
+        dayAbsenceCount2.setHeight("30px");
+        dayAbsenceCount2.getStyle().set("border", "1px solid #9E9E9E");
+        dayAbsenceCount2.getStyle().set("color", "#1E90FF");
+        dayAbsenceCount2.getStyle().set("font-size", "x-large");
 
         cm1.add(weekAbsence);
         cm1.add(dayAbsenceCount);

@@ -1,6 +1,8 @@
 package entities;
 
 import box.StatusEvent;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,7 +17,8 @@ public class Absence extends Event{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ID;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
@@ -30,11 +33,13 @@ public class Absence extends Event{
     private String comment;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name="overtime_id")
     private Overtime reasonsOfAbsenceOvertime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name="business_trip_weekend_id")
     private BusinessTripWeekEnd reasonsOfAbsenceBusinessTrip;
 

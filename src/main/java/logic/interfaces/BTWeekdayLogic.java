@@ -17,6 +17,7 @@ public interface BTWeekdayLogic {
 
     //get
     List<BusinessTripWeekday> getAllActiveEmployeeBTWeekday(Employee employee, int year) throws DataStorageException;
+    List<BusinessTripWeekday> getAllActiveBTWeekday(int year) throws DataStorageException;
     int getCountOfActiveEmployeeBTWeekday(Employee employee, int year) throws DataStorageException;
 //    int getCountOfActiveBTForPeriod(LocalDate dateFrom, LocalDate dateTo);
 //    int getCountOfBusinessTripsForPeriodOfEmployee(Employee employee, LocalDate dateFrom, LocalDate dateTo);

@@ -37,4 +37,21 @@ public class Event {
         this.statusEvent = statusEvent;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "employee=" + employee +
+                ", dateOfEvent=" + dateOfEvent +
+                ", statusEvent=" + statusEvent +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

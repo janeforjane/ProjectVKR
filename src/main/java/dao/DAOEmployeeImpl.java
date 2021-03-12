@@ -6,21 +6,27 @@ import entities.Employee;
 import logic.exception.EmployeeNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.units.qual.A;
 
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Stateless
 @Local
-@TransactionManagement(value = TransactionManagementType.BEAN)
+//@TransactionManagement(value = TransactionManagementType.BEAN)
 public class DAOEmployeeImpl implements DAOEmployee {
 
-    @PersistenceUnit(unitName = "input-message")
-    private EntityManagerFactory entityManagerFactory;
+//    @PersistenceUnit(unitName = "input-message")
+//    private EntityManagerFactory entityManagerFactory;
+
+    @PersistenceContext(unitName = "input-message")
+    private EntityManager entityManager;
 
     private static final Logger log = LogManager.getLogger(DAOEmployeeImpl.class);
 
@@ -29,11 +35,11 @@ public class DAOEmployeeImpl implements DAOEmployee {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//
+//            entityManager.getTransaction().begin();
             entityManager.persist(employee);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("newEmployee:new employee was persist in DB");
 
@@ -47,7 +53,7 @@ public class DAOEmployeeImpl implements DAOEmployee {
 
         Employee employeeFromDB = null;
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             employeeFromDB = entityManager.find(Employee.class, id);
 
@@ -70,21 +76,16 @@ public class DAOEmployeeImpl implements DAOEmployee {
 
         }
 
-        if (entityManagerFactory == null) {
-
-            log.info("entityManagerFactory is null");
-        }
-
         Employee employeeInDB = null;
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             employeeInDB = entityManager.find(Employee.class, employee.getID());
             if (employeeInDB != null) {
-                entityManager.getTransaction().begin();
+//                entityManager.getTransaction().begin();
                 entityManager.merge(employee);
-                entityManager.getTransaction().commit();
+//                entityManager.getTransaction().commit();
 
                 log.info("modifyEmployee:employee was modify in DB");
             }
@@ -104,12 +105,14 @@ public class DAOEmployeeImpl implements DAOEmployee {
         try {
 
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
-            List allEmployees = entityManager.createQuery("from Employee").getResultList();
+            List allEmployees = new ArrayList();
+            List allEmployees2 = entityManager.createQuery("from Employee").getResultList();
+            allEmployees.addAll(allEmployees2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
 
             return allEmployees;
@@ -122,8 +125,8 @@ public class DAOEmployeeImpl implements DAOEmployee {
     @Override
     public boolean isEmployeeExist(String lastname, String name, String secondName) throws DataStorageException {
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             boolean exist = !entityManager.createQuery
                     ("from Employee where name=:name and secondName=:secondName and lastName=:ln", Employee.class)
@@ -133,7 +136,7 @@ public class DAOEmployeeImpl implements DAOEmployee {
                     .getResultList().isEmpty();
 //       Employee employee = entityManager.createQuery("from Employee where ");
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
             return exist;
         } catch (Exception e) {
             throw new DataStorageException("isEmployeeExist:Error. Data Storage error.", e);

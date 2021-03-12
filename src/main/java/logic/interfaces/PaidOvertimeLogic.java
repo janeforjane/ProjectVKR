@@ -20,6 +20,7 @@ public interface PaidOvertimeLogic {
     List<PaidOvertime> getAllActivePaidOvertime(Employee employee, int year) throws DataStorageException;
     int getCountOfPaidOvertime (Employee employee, int year) throws DataStorageException;
     int getCountOfPaidOvertimeForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
+    List<PaidOvertime> getAllActivefPaidOvertimeForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
     int getCountOfPaidOvertimeForPeriodOfEmployee(Employee employee, LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
 
     //remove

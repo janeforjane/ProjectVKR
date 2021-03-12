@@ -45,11 +45,13 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifyAbsenceComment(Absence absence) throws DataStorageException {
         daoAbsence.modifyAbsence(absence);
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void removeReasonForAbsence(Absence absence, CommonOvertime commonOvertime) throws DataStorageException {
 
         if (commonOvertime instanceof Overtime){
@@ -66,6 +68,7 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void addReasonOfAbsence(Absence absence, CommonOvertime additionalCommonOvertime) throws DataStorageException, ReasonAlreadyExistException {
 
         if (absence.getReasonsOfAbsenceOvertime() == null) {
@@ -84,6 +87,7 @@ public class AbsenceLogicImpl implements AbsenceLogic {
 
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Absence> getAllActiveAbsenceDays(Employee employee, int year) throws DataStorageException {
 
         List<Absence> allActiveEmployeeAbsences = daoAbsence.getAllEmployeeActiveAbsences(employee, year);
@@ -99,6 +103,13 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<Absence> getAllActiveOfAbsencesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
+        return daoAbsence.getAllActiveAbsencesForPeriod(dateFrom, dateTo);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Absence> getAllAbsenceDaysWithReasons(Employee employee, int year) throws DataStorageException {
 
         List<Absence> allActiveEmployeeAbsences = daoAbsence.getAllEmployeeActiveAbsences(employee, year);
@@ -125,6 +136,7 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<Absence> getAllAbsenceDaysWithoutReasons(Employee employee, int year) throws DataStorageException {
         List<Absence> allActiveEmployeeAbsences = daoAbsence.getAllEmployeeActiveAbsences(employee, year);
 //        List<Absence> allAbsenceDaysWithoutReasons = new ArrayList<>();
@@ -145,12 +157,14 @@ public class AbsenceLogicImpl implements AbsenceLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfEmployeeAbsenceDays(Employee employee, int year) throws DataStorageException {
         return getAllActiveAbsenceDays(employee, year).size();
 
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void cancelAbsence(Absence absence) throws DataStorageException {
         //получить день-переработка за этот absence и у него убрать ссылку на этот absence
         CommonOvertime reasonOfAbsence = absence.getReasonsOfAbsenceOvertime();

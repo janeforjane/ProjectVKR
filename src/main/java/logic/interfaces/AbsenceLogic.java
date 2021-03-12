@@ -24,6 +24,7 @@ public interface AbsenceLogic {
     List<Absence> getAllAbsenceDaysWithoutReasons(Employee employee, int year) throws DataStorageException;
     int getCountOfEmployeeAbsenceDays(Employee employee, int year) throws DataStorageException;
     int getCountOfAbsencesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
+    List<Absence> getAllActiveOfAbsencesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
 
 
     //remove

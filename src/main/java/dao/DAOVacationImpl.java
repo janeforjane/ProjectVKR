@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,11 +23,15 @@ import java.util.List;
 @Stateless
 //@LocalBean
 @Local
-@TransactionManagement(value= TransactionManagementType.BEAN)
+//@TransactionManagement(value= TransactionManagementType.BEAN)
 public class DAOVacationImpl implements DAOVacation {
 
-    @PersistenceUnit(unitName = "input-message")
-    private EntityManagerFactory entityManagerFactory;
+//    @PersistenceUnit(unitName = "input-message")
+//    private EntityManagerFactory entityManagerFactory;
+
+    @PersistenceContext(unitName = "input-message")
+    private EntityManager entityManager;
+
 
     private static final Logger log = LogManager.getLogger(DAOVacationImpl.class);
 
@@ -35,11 +40,11 @@ public class DAOVacationImpl implements DAOVacation {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//
+//            entityManager.getTransaction().begin();
             entityManager.persist(vacation);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("newVacation:new vacation was persist in DB");
 
@@ -54,10 +59,10 @@ public class DAOVacationImpl implements DAOVacation {
     public void modifyVacation(Vacation vacation) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.merge(vacation);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("modifyVacation:vacation was modify in DB");
 
@@ -74,10 +79,10 @@ public class DAOVacationImpl implements DAOVacation {
 
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
             entityManager.remove(vacation);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             log.info("removeVacation:vacation was remove in DB");
 
@@ -92,7 +97,7 @@ public class DAOVacationImpl implements DAOVacation {
     public Vacation getVacation(Vacation vacation) throws DataStorageException {
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
 
             Vacation vacationFromDB = entityManager.find(Vacation.class, vacation.getID());
 
@@ -112,15 +117,15 @@ public class DAOVacationImpl implements DAOVacation {
     public List<Vacation> getAllVacation() throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             List allVacations = entityManager
                     .createQuery("from Vacation where yearOfEvent=:year", Vacation.class)
                     .setParameter("year", 2020)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
 
             return allVacations;
@@ -134,8 +139,8 @@ public class DAOVacationImpl implements DAOVacation {
     public List<Vacation> getAllActiveVacationForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             final List allVacations = new ArrayList();
 
@@ -148,7 +153,7 @@ public class DAOVacationImpl implements DAOVacation {
 
 
             allVacations.addAll(allVacations2);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allVacations;
         }catch (Exception e){
@@ -161,8 +166,8 @@ public class DAOVacationImpl implements DAOVacation {
     public List<Vacation> getAllEmployeeVacation(Employee employee, int year) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             List allVacations = entityManager
                     .createQuery("from Vacation where employee=:empl and yearOfEvent=:year ", Vacation.class)
@@ -171,7 +176,7 @@ public class DAOVacationImpl implements DAOVacation {
                     .setParameter("year", year)
                     .getResultList();
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allVacations;
         }catch (Exception e){
@@ -185,8 +190,8 @@ public class DAOVacationImpl implements DAOVacation {
 
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
             final List allVacations = new ArrayList();
 
@@ -201,7 +206,7 @@ public class DAOVacationImpl implements DAOVacation {
 
             allVacations.addAll(allVacations2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
 
             return allVacations;
         }catch (Exception e){
@@ -214,8 +219,8 @@ public class DAOVacationImpl implements DAOVacation {
     public List<Vacation> getAllEmployeeActiveVacationDays(Employee employee, int year) throws DataStorageException {
         try {
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
 
 
             final List allVacations = new ArrayList();
@@ -229,17 +234,8 @@ public class DAOVacationImpl implements DAOVacation {
 
             allVacations.addAll(allVacations2);
 
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().commit();
             return allVacations;
-
-//            if (allVacations.size()>0){
-//                return allVacations;
-//            }else {
-//                throw new EventNotFoundException("AllEmployeeActiveVacationDays list is empty");
-//            }
-
-//        }catch (NullPointerException ev){
-//            throw new EventNotFoundException("AllEmployeeActiveVacationDays list is empty", ev);
 
         }
         catch (Exception e){

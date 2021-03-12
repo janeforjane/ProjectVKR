@@ -28,6 +28,7 @@ public interface OvertimeLogic {
     List<Overtime> getAllOvertimesWithoutAbsences(Employee employee, int year) throws DataStorageException;
     int getCountOfOvertimeDays (Employee employee, int year) throws DataStorageException;
     int getCountOfOvertimesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
+    List<Overtime> getAllActiveOvertimesForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
 
     //remove
     void cancelOvertime(Overtime overtime) throws DataStorageException;

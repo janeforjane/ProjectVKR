@@ -9,10 +9,8 @@ import logic.exception.DateIsBusyException;
 import logic.interfaces.EventLogic;
 import logic.interfaces.PaidOvertimeLogic;
 
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 @Stateless
@@ -20,10 +18,13 @@ import java.util.List;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class PaidOvertimeLogicImpl implements PaidOvertimeLogic {
 
+    @EJB
     DAOPaidOvertime daoPaidOvertime;
+    @EJB
     EventLogic eventLogic;
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createPaidOvertime(Employee employee, LocalDate dateOfPaidOvertime) throws DateIsBusyException, DataStorageException {
 
         if(eventLogic.isDateFree(employee, dateOfPaidOvertime)){
@@ -39,32 +40,43 @@ public class PaidOvertimeLogicImpl implements PaidOvertimeLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifyCommentPaidOvertime(PaidOvertime paidOvertime) throws DataStorageException {
         daoPaidOvertime.modifyPaidOvertime(paidOvertime);
 
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<PaidOvertime> getAllActivePaidOvertime(Employee employee, int year) throws DataStorageException {
         return daoPaidOvertime.getAllEmployeeActivePaidOvertime(employee,year);
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfPaidOvertime(Employee employee, int year) throws DataStorageException {
         return daoPaidOvertime.getAllEmployeeActivePaidOvertime(employee,year).size();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfPaidOvertimeForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         return daoPaidOvertime.getAllPaidOvertimeForPeriod(dateFrom, dateTo).size();
     }
 
     @Override
+    public List<PaidOvertime> getAllActivefPaidOvertimeForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
+        return daoPaidOvertime.getAllPaidOvertimeForPeriod(dateFrom, dateTo);
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfPaidOvertimeForPeriodOfEmployee(Employee employee, LocalDate dateFrom, LocalDate dateTo) throws DataStorageException {
         return daoPaidOvertime.getAllEmployeePaidOvertimeForPeriod(employee, dateFrom, dateTo).size();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void cancelPaidOvertime(PaidOvertime paidOvertime) throws DataStorageException {
         paidOvertime.setStatusEvent(StatusEvent.NOTACTIVE);
         daoPaidOvertime.modifyPaidOvertime(paidOvertime);

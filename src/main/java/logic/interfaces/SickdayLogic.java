@@ -20,6 +20,7 @@ public interface SickdayLogic {
     List<Sickday> getAllActiveSickDays(Employee employee, int year) throws DataStorageException;
     int getCountOfSickdaysOfEmployee(Employee employee, int year) throws DataStorageException;
     int getCountOfAllSickdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
+    List<Sickday> getAllSickdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
 
 
     //remove

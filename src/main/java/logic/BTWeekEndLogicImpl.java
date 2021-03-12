@@ -14,6 +14,7 @@ import logic.interfaces.BTWeekEndLogic;
 import logic.interfaces.EventLogic;
 
 import javax.ejb.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
 
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createBTWeekEndWithoutAbsence(Employee employee, LocalDate dateOfBTWeekEnd) throws DateIsBusyException, DataStorageException {
         //проверить нет ли переработки на этот день
         //создать командировку
@@ -52,6 +54,7 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void createBTWeekEndWithAbsence(Employee employee, LocalDate dateOfBTWeekEnd, LocalDate dateOfAbsence) throws DateIsBusyException, DataStorageException {
         //проверить нет ли переработки на день командировки
         //проверить нет ли события на день отгула
@@ -81,6 +84,7 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void addAbsence(Employee employee, BusinessTripWeekEnd businessTripWeekEnd, Absence absence) throws ReasonAlreadyExistException, DataStorageException {
         /*
         проверить наличие absence у BT, если есть - выкинуть исключение
@@ -107,23 +111,27 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void modifyBTWeekendComment(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException {
         daobtWeekEnd.modifyBTWeekEnd(businessTripWeekEnd);
 
     }
 
     @Override
-    public List<BusinessTripWeekEnd> getAllActiveBTWeekEnd(Employee employee, int year) throws DataStorageException {
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<BusinessTripWeekEnd> getAllActiveEmployeeBTWeekEnd(Employee employee, int year) throws DataStorageException {
 
         return daobtWeekEnd.getAllEmployeeActiveBTWeekEnd(employee, year);
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public int getCountOfBTWeekEndDays(Employee employee, int year) throws DataStorageException {
         return daobtWeekEnd.getAllEmployeeActiveBTWeekEnd(employee, year).size();
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void removeAbsenceFromBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException {
 
         businessTripWeekEnd.setAbsenceForOvertime(null);
@@ -131,6 +139,7 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void cancelBTWeekEnd(BusinessTripWeekEnd businessTripWeekEnd) throws DataStorageException {
         //деактивировать командировку
         //найти absence с ней связанный - его отвязать от этой
@@ -152,6 +161,7 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<BusinessTripWeekEnd> getAllBTWeekEndWithAbsences(Employee employee, int year) throws DataStorageException {
 
         List<BusinessTripWeekEnd> allEmployeeActiveBTWeekEnd = daobtWeekEnd.getAllEmployeeActiveBTWeekEnd(employee, year);
@@ -168,6 +178,15 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<BusinessTripWeekEnd> getAllActiveBTWeekEnd(int year) throws DataStorageException {
+
+        List<BusinessTripWeekEnd> allActiveBTWeekEnd = daobtWeekEnd.getAllActiveBTWeekEnd(year);
+        return allActiveBTWeekEnd;
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public List<BusinessTripWeekEnd> getAllBTWeekEndWithoutAbsences(Employee employee, int year) throws DataStorageException {
         List<BusinessTripWeekEnd> allEmployeeActiveBTWeekEnd = daobtWeekEnd.getAllEmployeeActiveBTWeekEnd(employee, year);
         List<BusinessTripWeekEnd> allBTWeekEndWithoutAbsences = new ArrayList<>();
@@ -183,6 +202,7 @@ public class BTWeekEndLogicImpl implements BTWeekEndLogic {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public Absence getAbsenceForOvertime(BusinessTripWeekEnd businessTripWeekEnd) {
         Absence absenceForOvertime = businessTripWeekEnd.getAbsenceForOvertime();
 

@@ -18,7 +18,7 @@ public interface DAOBTWeekday {
     List<BusinessTripWeekday> getAllBTWeekdays();
     List<BusinessTripWeekday> getAllEmployeeBTWeekdays(Employee employee, int year);
     List<BusinessTripWeekday> getAllEmployeeBTWeekdaysForPeriod(Employee employee, LocalDate dateFrom, LocalDate dateTo);
-    List<BusinessTripWeekday> getAllBTWeekdaysForPeriod(LocalDate dateFrom, LocalDate dateTo);
+    List<BusinessTripWeekday> getAllBTWeekdaysForPeriod(LocalDate dateFrom, LocalDate dateTo) throws DataStorageException;
 
     List<BusinessTripWeekday> getAllEmployeeActiveBTWeekdays(Employee employee, int year) throws DataStorageException;
 

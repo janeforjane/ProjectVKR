@@ -5,7 +5,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
-import ui.menuBarsForm.EmployeesForm;
+import ui.menuBarsForm.*;
 
 
 public class MainLayout extends AppLayout {
@@ -21,13 +21,43 @@ public class MainLayout extends AppLayout {
 //        menuBar.add(new RouterLink(EmployeeForm.TITLE, EmployeeForm.class));
 
         RouterLink emplFormlink = new RouterLink(EmployeesForm.TITLE, EmployeesForm.class);
-        emplFormlink.setText("Employees");
+        emplFormlink.setText("Сотрудники");
         menuBar.add(emplFormlink);
 
+        RouterLink vacationFormlink = new RouterLink(VacationForm.TITLE, VacationForm.class);
+        vacationFormlink.setText("Отпуск");
+        menuBar.add(vacationFormlink);
+
+        RouterLink sickFormlink = new RouterLink(SickdaysForm.TITLE, SickdaysForm.class);
+        sickFormlink.setText("Больничные");
+        menuBar.add(sickFormlink);
+
+        RouterLink BTFormlink = new RouterLink(BusinessTripsForm.TITLE, BusinessTripsForm.class);
+        BTFormlink.setText("Командировки");
+        menuBar.add(BTFormlink);
+
+
+        RouterLink OvertimesFormlink = new RouterLink(OvertimesForm.TITLE, OvertimesForm.class);
+        OvertimesFormlink.setText("Переработки");
+        menuBar.add(OvertimesFormlink);
+
+
+        RouterLink AbsencesFormlink = new RouterLink(AbsencesForm.TITLE, AbsencesForm.class);
+        AbsencesFormlink.setText("Отсутствия");
+        menuBar.add(AbsencesFormlink);
 
 //        RouterLink link = new RouterLink(VacationForm.TITLE, VacationForm.class);
 //        link.setText("Vacations");
 //        menuBar.add(link);
+
+        //java:module/OvertimeLogicImpl
+        //java:module/AbsenceLogicImpl
+        //java:module/SickdayLogicImpl
+        //java:module/BTWeekEndLogicImpl
+        //java:module/VacationLogicImpl
+        //java:module/EventLogicImpl
+        //java:module/PaidOvertimeLogicImpl
+        //java:module/BTWeekdayLogicImpl
 
 
 
